@@ -1,148 +1,114 @@
-# contest2026_478_zhichimijiapeidui
-
-👋 欢迎参加 **2026 首届 openvela AI 硬件开发者大赛**！
-
-这是组委会为你的队伍创建的**专属参赛仓库**（本仓为样例/模板，队伍编号 `478`；你看到的将是你自己的 `contest2026_<编号>_<队伍名>`）。比赛期间，你的全部参赛代码、打包产物与 AI Coding 日志都提交到这里。
-
-> 本仓既是「代码仓」，又内置了一键拉取整套 openvela 工程的 `repo` 清单（manifest）。你只需跟它打交道，**自始至终只动一个文件夹**。
-
----
-
-## 一、先读这些官方文档
-
-**通用（所有赛道必读）：**
-
-| 文档                                                                                                                                     | 用途                                           |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [《大赛总览》](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/contest_overview.md)                        | 赛道、流程、评分、资源，建议先通读             |
-| [《参赛代码提交指南》](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/code_submission_guide.md)           | 仓库获取、提交流程、时间与权限（**以此为准**） |
-| [《AI Coding 日志归集与提交手册》](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/ai_coding_log_guide.md) | 如何导出 AI 对话日志并提交到 `logs/`           |
-
-**按你的赛道选读（三选一）：**
-
-| 赛道                  | 教程导航                                                                                                                                                 |
-| --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 快应用 / 手表应用创新 | [快应用教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/quickapp/quickapp_guide_index.md)                         |
-| AI 硬件产品创新       | [AI 硬件赛道教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/ai_hardware/ai_hardware_guide_index.md)              |
-| 新硬件适配            | [新硬件适配赛道教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/hardware_porting/hardware_porting_guide_index.md) |
-
----
-
-## 二、第一步：拉取完整工程
-
-用组委会提供的命令一键拉取「openvela 全量源码 + 你的专属仓」：
-
-```bash
-repo init -u https://github.com/open-vela/contest2026_478_zhichimijiapeidui \
-  -b dev-ai-contest-2026 -m contest2026_478_zhichimijiapeidui.xml
-repo sync -c -j8
-```
-
-同步后，你的整个仓库位于工作区的 `contest2026_478_zhichimijiapeidui/`，openvela 全量源码在外层（`nuttx/`、`apps/`、`packages/`、`vendor/` 等）。
-
----
-
-## 三、第二步：在哪里写代码
-
-**只在自己的仓目录 `contest2026_478_zhichimijiapeidui/` 里开发。** 不同作品形态放在对应子目录，manifest 会通过 `<linkfile>` 把它们**软链**到 openvela 编译树该在的位置——你不用手动 copy：
-
-| 作品形态 | 你的代码放这里             | 系统自动映射到                                 |
-| -------- | -------------------------- | ---------------------------------------------- |
-| 应用     | `app/hello_app/`           | `packages/demos/contest2026_478_hello_app`     |
-| 快应用   | `quickapp/hello_quickapp/` | `packages/apps/contest2026_478_hello_quickapp` |
-| 板级适配 | `board/contest_board/`     | `vendor/openvela/boards/contest2026_478_board` |
-
-> 用不到的形态目录可以删掉；新增作品时按同样规则加子目录，并在 `contest2026_478_zhichimijiapeidui.xml` 里补一条 `<linkfile>` 映射即可。**生产仓库（packages/nuttx/vendor 等）零改动。**
-
-建议仓库目录约定（便于评委定位）：
-
-```text
-app/ | quickapp/ | board/   # 你的作品代码
-logs/                       # AI Coding 日志（主动导出后提交，格式见 logs/README.md）
-README.md                   # 作品说明（提交前请改成你自己的，见第六节）
-```
-
-> 仓内附带了一个 `.gitignore.example`，给出了**编译产物**等不需要进仓的文件示例。如需启用，`cp .gitignore.example .gitignore` 后按需增删即可。**注意 `logs/` 下最终导出的 AI Coding 日志必须提交，不要忽略。**
->
-> `logs/` 的目录结构与提交格式见 [logs/README.md](logs/README.md)。
-
----
-
-## 四、第三步：编译与运行
-
-编译/运行步骤随作品形态不同而不同，请参考你所在赛道的教程导航：
-
-- 快应用 / 手表应用：[快应用教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/quickapp/quickapp_guide_index.md)（含模拟器与开发板部署）。
-- AI 硬件产品创新：[AI 硬件赛道教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/ai_hardware/ai_hardware_guide_index.md)（环境搭建、编译烧录、Skill 开发）。
-- 新硬件适配：[新硬件适配赛道教程导航](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/hardware_porting/hardware_porting_guide_index.md)（BSP 移植、最小 NSH 基线）。
-
-子目录已通过 manifest 中的 `<linkfile>` 软链进 openvela 编译树，因此构建在 openvela 工作区**根目录**（即你这个仓的上一级）进行。openvela 使用 `build.sh` 作为统一入口，接收一个 **board config 路径**作为参数：
-
-```bash
-# 进入 openvela 工作区根目录（你的仓的上一级）
-cd ..
-
-# 通用语法：第一个参数是 board config 路径，第二个参数可以是 menuconfig / distclean 等
-./build.sh <board-config-path> [menuconfig|distclean] [-j8]
-```
-
-> 具体的 board config 路径、目标产物、模拟器/真机部署方式请以你所在赛道的教程导航为准。本仓 `app/` `quickapp/` `board/` 三个示例骨架对应的 Kconfig 选项可通过 `menuconfig` 启用。
-
----
-
-## 五、第四步：提交作品
-
-1. **fork** 你的专属仓 → 开发 → `git commit` 并推送 → 向专属仓发起 **Pull Request**，可**自行 review 并合入**（无需等组委会）。
-2. **AI Coding 日志**：与 AI 工具的对话会自动记录到本机 staging（不会自动上传），需你**主动导出/打包**选定会话到仓内 `logs/` 目录后一并提交。详见[《AI Coding 日志归集与提交手册》](https://github.com/open-vela/docs/blob/dev-ai-contest-2026/zh-cn/contest_2026/ai_coding_log_guide.md)。
-3. 若需改动 **nuttx 等公共仓库**，不在本仓改，而是 fork 对应公共仓、以 PR 提交到 `dev-ai-contest-2026` 分支，由组委会 review 后合入。
-
-> ⏰ **提交作品截止：9 月 20 日**。截止后统一收回 push 权限，仍可查看 / clone。
->
-> 获奖后再按要求将作品 PR 至 openvela 上游对应仓库（走标准 PR + CI 流程）。
-
-### 关于 PR 与 CLA
-
-- 本仓所有改动通过 **Pull Request** 合入（分支保护强制，可自行合入自己的 PR）。
-- 首次贡献需在[**官网签署 CLA**](https://openvela.com/#/community/cla)；PR 上会自动跑 `cla/signature` 检查，在官网签署成功后，在 PR 评论 `/check-cla` 复检即可通过。
-
----
-
-## 六、提交前：把本 README 改成你的作品说明
-
-本文件目前是组委会给的**使用说明书**。**作品提交前，请把它替换成你自己作品的说明**，方便评委快速了解你做了什么、怎么跑起来。建议至少包含以下内容：
-
-```markdown
-# <你的作品名>
+# Mibot —— 双板桌面语音助手（SF32LB52-LCD + ESP32-S3）
 
 ## 一、作品简介
-<一句话/一段话说明这个作品是什么、解决什么问题、亮点在哪>
+
+一块 SF32LB52-LCD（openvela 侧）+ 一块 ESP32-S3（Wi-Fi 控制器侧）组成的桌面语音助手。两块板子通过 AA55 板间 UART 以 1 Mbps 直连：
+
+- SF32 侧用**板载真麦克风**采集语音，LCD 显示状态表情；
+- ESP32 侧负责 Wi-Fi 与 AI：它把音频上行到音频网关做语音识别，把识别文本交给 MiMo 大模型（ESP32 直接 HTTPS 直连），拿到回复后经网关合成语音下行，由 SF32 播出来。
+- ESP32 上还跑着一个 **agent 大脑（piagent）**：带人格、20 轮短记忆、NVS 断电不丢的长记忆，不需要借用 PC 算力。
+
+完整的真实链路（真麦 → ASR → LLM → TTS → 扬声器）已在实物上全部跑通，采用对讲机式交互：在 SF32 控制台敲 `va_wake` 触发一轮对话。
+
+技术协议、编译环境与排障的完整文档见 `AI_INTEGRATION.md`；参赛文档见 `docs/`。
 
 ## 二、选题方向
-<快应用 / 手表应用创新 ｜ AI 硬件产品创新 ｜ 新硬件适配 ｜ 自定方向，并简述理由>
+
+**AI 硬件产品创新。**
+
+一个 AI 语音助手产品如何在「一块算力有限的小板 + 一块只有 WiFi 的板」上做成双板分工的形态：SF32 管交互（收音/播音/表情）、ESP32 管智能（Wi-Fi / ASR 上行 / LLM / TTS），板间用自研二进制帧协议（AA55 + CRC16）交换音频与结构化消息。亮点：
+
+- 无需云上部署大模型推理服务——ESP32 直接对 MiMo 发 HTTPS；
+- 设备端记忆（短记忆 + 断电持久化长记忆），对话有连续性；
+- 音频网关可本地离线识别（sherpa-onnx Paraformer，零云 key）跑通全链路；
+- 底盘（ToF050C ×4 + 电机）已留好安全层，未装配模块时运动锁定，不会误跑。
 
 ## 三、目录结构
-<列出你这个仓里各目录/文件的作用，例如：>
-- `app/xxx/`        — <说明>
-- `board/xxx/`      — <说明>
-- `quickapp/xxx/`   — <说明>
-- `logs/`           — AI Coding 日志
-- `docs/` 或其他    — <说明>
 
-## 四、运行方式
-<拉取工程后，如何编译、烧录/部署、运行的完整步骤；最好能让评委照着一步步复现>
-
-## 五、AI Coding 使用说明
-<说明本作品如何借助 AI 辅助开发：
-- 在需求拆解 / 方案设计 / 编码 / 调试 / 文档等环节如何与 AI 协作；
-- AI 对开发效率或质量带来的实际帮助。
-完整对话日志见 logs/ 目录>
+```text
+contest2026_478_zhichimijiapeidui/
+├── README.md                    本作品说明
+├── AI_INTEGRATION.md            AA55 协议 / WS 音频协议 / 编译环境 / 排障表
+├── contest2026_478_....xml      仓库 manifest（软链映射见下）
+├── app/
+│   ├── mibot_voice_agent/       SF32 openvela 应用（NuttX app）
+│   │                            → 软链到 packages/demos/contest2026_478_mibot_voice_agent
+│   │   含 mibot_voice_agent_main.c / sf32lb_i2s.c（麦克风电平修复）/ va_face（LCD 表情）/ script/
+│   ├── mibot_esp32s3/           ESP32-S3 ESP-IDF 控制器 + piagent（main/）+ 网关/联调工具（tools/）
+│   ├── esp32s3_tools/           ESP32 侧独立辅助脚本（pc_sf32_test.py 等）
+│   └── examples/deepseek_smoke/ 最小链路冒烟示例（sf32 + esp32）
+├── firmware/                    预编译固件，可直接烧
+│   ├── sf32/voice_agent_nuttx.bin       2026-09-19 麦克风电平修复版
+│   └── esp32/{bootloader, partition-table, mibot_esp32s3}.bin
+├── tools/                       烧录脚本（flash-sf32.ps1 / flash-esp32.ps1）+ SiFli 官方烧录器
+├── docs/                        参赛文档《2026 首届 openvela AI 硬件开发者大赛·文档.md》+ 图片/录像
+└── logs/                        AI Coding 日志（提交格式见 logs/README.md，待导出补齐）
 ```
 
-> 提示：将会根据「作品本身 + 你的 README 说明 + `logs/` 里的 AI Coding 日志」来理解和评估你的作品，README 写清楚很重要。
+## 四、运行方式
 
----
+### 接线
 
-## 附：仓库命名规范
+| 链路 | 引脚 | 参数 |
+|---|---|---|
+| 板间业务 UART | SF32 PA27(TX) → ESP32 GPIO2(RX)；SF32 PA28(RX) ← ESP32 GPIO1(TX) | 3.3V TTL，1 Mbps 8N1 |
+| SF32 控制台/烧录 | COM5 | 1000000 |
+| ESP32 串口/烧录 | COM4 | 115200 |
 
-`contest2026_<编号>_<队伍名>` — 编号三位零填充；队名 slug（全小写、英文/拼音、连字符）。例：`contest2026_478_zhichimijiapeidui`。
-（仓库由组委会统一创建，**每队仅一个仓**，无需自行命名。）
+### 烧录
+
+```powershell
+# SF32（预编译修复固件）
+.\tools\flash-sf32.ps1 -Port COM5
+
+# ESP32（预编译镜像，无需装 ESP-IDF）
+.\tools\flash-esp32.ps1 -Port COM4
+```
+
+> 预编译 ESP32 镜像内的凭据是**占位符**（Wi-Fi / MiMo key）。要直接使用预编译固件跑通对话，有两个选择：
+> 1. 从源码重编：复制 `app/mibot_esp32s3/main/mibot_secrets.h.example` 为 `mibot_secrets.h` 填入你的 WiFi 与 MiMo key；
+> 2. 或保持二进制补丁方式：用 `tools/patch_piagent_creds.py`（同级压缩包工具，槽位限长，自动重算校验和）就地写入。
+> 固件内 `ws://<网关地址>:8765` 需指向运行音频网关的那台电脑。
+
+### 起 PC 音频网关（语音功能的依赖，一直开着）
+
+```powershell
+cd app\mibot_esp32s3\tools
+python -X utf8 -u volc_gateway.py --host 0.0.0.0 --port 8765 --asr-engine local
+```
+
+本地离线中文 ASR（sherpa-onnx Paraformer）+ edge TTS（zh-CN-XiaoxiaoNeural），不需要任何云语音 key。
+
+### SF32 上电后启动并对话
+
+```
+nsh> mibot_voice_agent &     ← 语音代理（每次上电都要）
+nsh> va_wake                  ← 触发一轮，听到提示后开口说话
+… ASR 听写 → MiMo 回答 → TTS 播报 → LCD 表情 …
+```
+
+固件说明了变化：SF32 烧录走 RAM 加载是**易失**的，断电后需重烧一次；修复固件下第二个采集窗存在已知挂起，临时用第一个窗口（见 `AI_INTEGRATION.md` §已知问题）。
+
+## 五、AI Coding 使用说明
+
+本作品全程使用 **Claude Code** 辅助开发，AI 参与的环节覆盖整个生命周期：
+
+- **需求拆解与方案设计**：双板分工（SF32 交互 / ESP32 智能）、板间 AA55 帧协议与 WS 音频协议由 AI 协助梳理成 `AI_INTEGRATION.md` 对接文档；
+- **编码**：板间协议固件（HELLO/命令/音频帧/CRC16）、ESP32 piagent（人格 + 记忆 + NVS）、PC 音频网关（本地 ASR + TTS）的初版代码由 AI 生成并逐轮修改；
+- **调试**：麦克风电平问题的根因定位（VAD 早停 + ADC 冷启动 2.8s 爬升，而非增益）、二次采集窗 DMA 挂起边界排查、ESDF 二进制检查/固件消毒等，均以对话形式展开；
+- **测试与文档**：M2（板间链路）/ M3（记忆）/ M5（网关双向）自动化验收用例、发布打包与 README 说明均为 AI 产出。
+
+完整对话日志见 `logs/` 目录（提交格式见 `logs/README.md`，将按官方工具导出补齐）。
+
+## 六、状态与已知问题
+
+| 能力 | 状态 |
+|---|---|
+| 板间 AA55 链路（HELLO/命令/音频帧/CRC16） | ✅ 全 PASS |
+| piagent 记忆（人格 + 短记忆 + NVS 长记忆） | ✅ 全 PASS（记住/断电恢复/回忆） |
+| PC 音频网关（本地 ASR + edge TTS） | ✅ 双向调通 |
+| MiMo LLM 直连（ESP32 → HTTPS） | ✅ 实测 status=200 |
+| 真麦 → ASR → 回答 → 出声 全闭环 | ✅ 实物跑通 |
+| 麦克风电平修复（ADC 常开） | 🔶 首个采集窗已验证，二次采集窗待修 |
+| 离线唤醒词 | ⛔ 未做，每轮手动 `va_wake` |
+| 底盘运动（ToF 未装） | ⛔ 预期 NACK（安全锁定） |

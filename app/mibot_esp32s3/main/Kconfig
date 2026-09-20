@@ -1,0 +1,184 @@
+menu "Mibot DeepSeek smoke gateway"
+
+config MIBOT_DEEPSEEK_GATEWAY
+    bool "Enable the bounded DeepSeek HTTP gateway"
+    default n
+    help
+        Accept 0x40 AI_REQUEST frames from the SF32 and asynchronously call
+        DeepSeek's OpenAI-compatible chat completions endpoint. The API key
+        is compiled from the local, ignored main/mibot_secrets.h file.
+        Only one request is in flight, and the result is returned as one
+        bounded 0x41 AI_RESPONSE frame.
+
+endmenu
+
+menu "Mibot experimental networking"
+
+config MIBOT_NET_BRIDGE
+    bool "Enable PPP-over-UART network bridge (experimental)"
+    default n
+    depends on LWIP_PPP_SUPPORT
+    depends on LWIP_PPP_SERVER_SUPPORT
+    depends on LWIP_PPP_ENABLE_IPV4
+    help
+        Add an isolated PPPoS server interface for the SF32 link.
+
+        This option is intentionally off by default. The bridge uses a
+        dedicated UART and never reads or writes the existing SF32 AA55
+        protocol UART. The SF32 peer must run a PPP client; native SLIP is
+        not enabled by this option.
+
+config MIBOT_NET_BRIDGE_UART_NUM
+    int "PPP bridge UART number"
+    depends on MIBOT_NET_BRIDGE
+    range 0 2
+    default 1
+    help
+        ESP32 UART peripheral used exclusively by the PPP bridge. Do not
+        select the UART used by the AA55/audio link or the console.
+
+config MIBOT_NET_BRIDGE_UART_TX_GPIO
+    int "PPP bridge UART TX GPIO"
+    depends on MIBOT_NET_BRIDGE
+    range 0 48
+    default 17
+    help
+        GPIO routed to the dedicated PPP UART TX signal. Verify this against
+        the carrier board schematic before enabling the bridge.
+
+config MIBOT_NET_BRIDGE_UART_RX_GPIO
+    int "PPP bridge UART RX GPIO"
+    depends on MIBOT_NET_BRIDGE
+    range 0 48
+    default 18
+    help
+        GPIO routed to the dedicated PPP UART RX signal. Verify this against
+        the carrier board schematic before enabling the bridge.
+
+config MIBOT_NET_BRIDGE_UART_BAUD
+    int "PPP bridge UART baud rate"
+    depends on MIBOT_NET_BRIDGE
+    range 9600 5000000
+    default 1000000
+
+config MIBOT_NET_BRIDGE_UART_RX_BUFFER
+    int "PPP bridge UART RX buffer bytes"
+    depends on MIBOT_NET_BRIDGE
+    range 1024 65536
+    default 8192
+
+config MIBOT_NET_BRIDGE_UART_TX_BUFFER
+    int "PPP bridge UART TX buffer bytes"
+    depends on MIBOT_NET_BRIDGE
+    range 1024 65536
+    default 8192
+
+config MIBOT_NET_BRIDGE_TASK_STACK
+    int "PPP bridge task stack words"
+    depends on MIBOT_NET_BRIDGE
+    range 2048 16384
+    default 4096
+
+config MIBOT_NET_BRIDGE_LOCAL_IP
+    string "PPP server IPv4 address"
+    depends on MIBOT_NET_BRIDGE
+    default "10.42.0.1"
+
+config MIBOT_NET_BRIDGE_PEER_IP
+    string "PPP peer IPv4 address"
+    depends on MIBOT_NET_BRIDGE
+    default "10.42.0.2"
+
+config MIBOT_NET_BRIDGE_DNS1
+    string "PPP DNS server IPv4 address"
+    depends on MIBOT_NET_BRIDGE
+    default "1.1.1.1"
+
+config MIBOT_NET_BRIDGE_DNS2
+    string "PPP secondary DNS server IPv4 address"
+    depends on MIBOT_NET_BRIDGE
+    default "8.8.8.8"
+
+config MIBOT_NET_BRIDGE_NAPT
+    bool "Enable NAPT on the PPP interface"
+    depends on MIBOT_NET_BRIDGE
+    depends on LWIP_IP_FORWARD
+    depends on LWIP_IPV4_NAPT
+    default n
+    help
+        Enable IPv4 NAPT after the PPP link comes up so the peer can use the
+        ESP32 Wi-Fi interface as its upstream route. This is a separate
+        policy choice and is deliberately not selected automatically.
+
+config MIBOT_SHARED_NET_BRIDGE
+    bool "Enable raw IPv4 bridge on the AA55 UART (experimental)"
+    default n
+    depends on LWIP_IPV4
+    depends on !MIBOT_NET_BRIDGE
+    help
+        Route-A transport using the existing SF32 AA55/audio UART. Each
+        0x70/0x71 AA55 payload carries one complete IPv4 packet. The ESP32
+        exposes a static vanilla lwIP interface; no PPP, LCP, IPCP, SLIP, or
+        Ethernet/ARP bytes are put on the wire. The controller continues to
+        own AA55 framing, CRC and UART locking.
+
+config MIBOT_SHARED_NET_MAX_PACKET
+    int "Maximum raw IPv4 packet bytes"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    range 576 4096
+    default 1600
+    help
+        Maximum complete IPv4 packet accepted on the shared UART. Keep this
+        above the configured MTU and below the AA55 payload limit.
+
+config MIBOT_SHARED_NET_RX_QUEUE_DEPTH
+    int "Raw IPv4 RX queue depth"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    range 2 64
+    default 8
+
+config MIBOT_SHARED_NET_TX_QUEUE_DEPTH
+    int "Raw IPv4 TX queue depth"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    range 2 64
+    default 8
+
+config MIBOT_SHARED_NET_TASK_STACK
+    int "Raw IPv4 worker stack words"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    range 2048 16384
+    default 3072
+
+config MIBOT_SHARED_NET_LOCAL_IP
+    string "SF32 bridge local IPv4 address"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    default "10.42.0.1"
+
+config MIBOT_SHARED_NET_PEER_IP
+    string "SF32 bridge peer IPv4 address"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    default "10.42.0.2"
+
+config MIBOT_SHARED_NET_NETMASK
+    string "SF32 bridge IPv4 netmask"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    default "255.255.255.252"
+
+config MIBOT_SHARED_NET_MTU
+    int "SF32 bridge IPv4 MTU"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    range 576 2000
+    default 1200
+
+config MIBOT_SHARED_NET_NAPT
+    bool "Enable NAPT for raw IPv4 bridge"
+    depends on MIBOT_SHARED_NET_BRIDGE
+    depends on LWIP_IP_FORWARD
+    depends on LWIP_IPV4_NAPT
+    default y
+    help
+        Enable IPv4 NAPT on the raw SF32 interface so SF32 traffic can use the
+        ESP32 Wi-Fi station as its upstream route. Also enable LWIP_IP_FORWARD
+        and LWIP_IPV4_NAPT in the lwIP configuration.
+
+endmenu

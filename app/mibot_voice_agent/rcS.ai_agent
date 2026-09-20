@@ -1,0 +1,4 @@
+/* ai_agent owns UART2 (/dev/ttyS0) through mibot_link.  Do not start the
+ * legacy mibot_agent daemon in this profile; both processes would contend for
+ * the same AA55 control/audio transport. */
+ai_agent &

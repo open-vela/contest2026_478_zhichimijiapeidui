@@ -1,0 +1,15 @@
+# Minimal DeepSeek smoke profile.  Wi-Fi credentials and the API key stay in
+# main/mibot_secrets.h, which is ignored by git.
+CONFIG_MIBOT_DEEPSEEK_GATEWAY=y
+CONFIG_ESP_HTTP_CLIENT_ENABLE_HTTPS=y
+CONFIG_ESP_TLS_USING_MBEDTLS=y
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE=y
+CONFIG_MBEDTLS_CERTIFICATE_BUNDLE_DEFAULT_FULL=y
+
+# The smoke check only needs the AA55 UART and Wi-Fi.  These are explicit so
+# a copy of a Route-A sdkconfig does not accidentally become part of the test.
+# CONFIG_MIBOT_NET_BRIDGE is not set
+# CONFIG_MIBOT_SHARED_NET_BRIDGE is not set
+# CONFIG_LWIP_IP_FORWARD is not set
+# CONFIG_LWIP_IPV4_NAPT is not set
+# CONFIG_LWIP_IPV4_NAPT_PORTMAP is not set

@@ -1,0 +1,12 @@
+# Standalone DeepSeek smoke profile.  It owns /dev/ttyS0 and must not be
+# combined with mibot_agent or ai_agent.
+CONFIG_EXAMPLES_DEEPSEEK_SMOKE=y
+CONFIG_EXAMPLES_DEEPSEEK_SMOKE_UART="/dev/ttyS0"
+CONFIG_EXAMPLES_DEEPSEEK_SMOKE_BAUD=1000000
+CONFIG_NETUTILS_CJSON=y
+CONFIG_NETUTILS_CJSON_VERSION="1.7.10"
+
+# Voice mode reuses the board's existing AUDPRC/AUDCODEC DMA lower-half.
+# The optional LVGL demo remains disabled because it is unrelated to this test.
+CONFIG_GRAPHICS_LVGL=n
+CONFIG_EXAMPLES_LVGLDEMO=n

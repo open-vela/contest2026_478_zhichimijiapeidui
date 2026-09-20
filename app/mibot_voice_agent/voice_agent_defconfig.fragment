@@ -1,0 +1,26 @@
+# Standalone Mibot voice-agent profile.  It owns /dev/ttyS0 (shared AA55/CRC
+# link to the ESP32) and must not be combined with mibot_agent, deepseek_smoke
+# or ai_agent.  First version runs all-stub (ASR/TTS/ToF) in Sequential_Mode.
+CONFIG_EXAMPLES_MIBOT_VOICE_AGENT=y
+CONFIG_EXAMPLES_MIBOT_VOICE_AGENT_PROGNAME="mibot_voice_agent"
+CONFIG_EXAMPLES_MIBOT_VOICE_AGENT_UART="/dev/ttyS0"
+CONFIG_EXAMPLES_MIBOT_VOICE_AGENT_BAUD=1000000
+CONFIG_EXAMPLES_MIBOT_VOICE_AGENT_FB="/dev/fb0"
+CONFIG_EXAMPLES_MIBOT_VOICE_AGENT_BUTTON="/dev/buttons"
+
+# Physical wake button: KEY2 on PA11 (active high, internal pulldown already set
+# by the board pinmux).  The board's sf32lb52_buttons.c lower half registers
+# /dev/buttons under CONFIG_INPUT_BUTTONS; the CMake board build compiles that
+# file unconditionally, so no CONFIG_ARCH_BUTTONS is needed here.
+CONFIG_INPUT=y
+CONFIG_INPUT_BUTTONS=y
+
+# DeepSeek AI_REQUEST/AI_RESPONSE and tool-call parsing reuse cJSON.
+CONFIG_NETUTILS_CJSON=y
+CONFIG_NETUTILS_CJSON_VERSION="1.7.10"
+
+# The voice agent uses the board's existing AUDPRC/AUDCODEC DMA lower-half for
+# mic capture and speaker playback, and the LCD framebuffer for status.
+# The optional LVGL demo stays disabled; it is unrelated to this app.
+CONFIG_GRAPHICS_LVGL=n
+CONFIG_EXAMPLES_LVGLDEMO=n

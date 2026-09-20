@@ -9,8 +9,6 @@
   <include name="openvela.xml"/>
 
   <project path="contest2026_478_zhichimijiapeidui" name="contest2026_478_zhichimijiapeidui">
-    <linkfile src="app/hello_app" dest="packages/demos/contest2026_478_hello_app"/>
-    <linkfile src="quickapp/hello_quickapp" dest="packages/apps/contest2026_478_hello_quickapp"/>
-    <linkfile src="board/contest_board" dest="vendor/openvela/boards/contest2026_478_board"/>
+    <linkfile src="app/mibot_voice_agent" dest="packages/demos/contest2026_478_mibot_voice_agent"/>
   </project>
 </manifest>

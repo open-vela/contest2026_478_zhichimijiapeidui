@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: Apache-2.0
+
+ifneq ($(CONFIG_EXAMPLES_MIBOT_AGENT),)
+CONFIGURED_APPS += $(APPDIR)/examples/mibot_agent
+endif
+
+ifneq ($(CONFIG_EXAMPLES_DEEPSEEK_SMOKE),)
+CONFIGURED_APPS += $(APPDIR)/examples/mibot_agent
+endif
+
+ifneq ($(CONFIG_EXAMPLES_MIBOT_VOICE_AGENT),)
+CONFIGURED_APPS += $(APPDIR)/examples/mibot_agent
+endif

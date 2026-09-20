@@ -1,0 +1,33 @@
+idf_component_register(
+    SRCS "mibot_controller.cpp"
+         "mibot_tof.cpp"
+         "mibot_vl6180x.c"
+         "deepseek_gateway.cpp"
+         "mibot_net_bridge.cpp"
+         "mibot_shared_net_bridge.cpp"
+         "mibot_audio.cpp"
+         "mibot_ring.cpp"
+         "mibot_audio_frame.cpp"
+         "mibot_cloud_ws.cpp"
+         "mibot_memory.cpp"
+    INCLUDE_DIRS "."
+    REQUIRES
+        driver
+        esp_driver_gpio
+        esp_driver_i2c
+        esp_driver_ledc
+        esp_driver_rmt
+        esp_driver_uart
+        esp_event
+        esp_http_client
+        esp_netif
+        esp_timer
+        esp_wifi
+        freertos
+        lwip
+        nvs_flash
+        espressif__cjson
+        espressif__esp_websocket_client
+        esp-tls
+        mbedtls
+)

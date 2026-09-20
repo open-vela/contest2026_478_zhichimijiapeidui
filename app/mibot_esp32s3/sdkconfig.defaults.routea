@@ -1,0 +1,27 @@
+# Route-A uses the existing AA55 UART and carries one complete IPv4 packet in
+# each 0x70/0x71 frame. Keep this file layered on top of the board's normal
+# sdkconfig so Wi-Fi, flash, and PSRAM settings remain board-specific.
+CONFIG_MIBOT_SHARED_NET_BRIDGE=y
+CONFIG_MIBOT_SHARED_NET_MAX_PACKET=1600
+CONFIG_MIBOT_SHARED_NET_RX_QUEUE_DEPTH=8
+CONFIG_MIBOT_SHARED_NET_TX_QUEUE_DEPTH=8
+CONFIG_MIBOT_SHARED_NET_TASK_STACK=3072
+CONFIG_MIBOT_SHARED_NET_LOCAL_IP="10.42.0.1"
+CONFIG_MIBOT_SHARED_NET_PEER_IP="10.42.0.2"
+CONFIG_MIBOT_SHARED_NET_NETMASK="255.255.255.252"
+CONFIG_MIBOT_SHARED_NET_MTU=1200
+CONFIG_MIBOT_SHARED_NET_NAPT=y
+
+# The SF32 packets must be forwarded from the raw peer interface to the Wi-Fi
+# STA interface and translated to the STA address before leaving the ESP32.
+CONFIG_LWIP_IP_FORWARD=y
+CONFIG_LWIP_IPV4_NAPT=y
+CONFIG_LWIP_IPV4_NAPT_PORTMAP=y
+
+# Route-A requires a custom table on the 16 MB flash module. The checked-in
+# partitions.csv is intentionally small and leaves the remaining flash free.
+CONFIG_PARTITION_TABLE_CUSTOM=y
+CONFIG_PARTITION_TABLE_CUSTOM_FILENAME="partitions.csv"
+CONFIG_PARTITION_TABLE_FILENAME="partitions.csv"
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="16MB"

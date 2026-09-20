@@ -1,0 +1,160 @@
+# SPDX-License-Identifier: Apache-2.0
+
+config EXAMPLES_MIBOT_AGENT
+	tristate "Mibot SF32 agent"
+	default n
+	depends on NSH_BUILTIN_APPS && !EXAMPLES_AI_AGENT_VELA
+	select PTHREAD
+	---help---
+		Run the Mibot SF32 agent. The agent is the sole mibot_link owner:
+		it owns the UART2 protocol, state machine, framebuffer status
+		renderer and optional I2S audio bridge for the SF32LB52-DevKit-LCD.
+		Control and audio frames are multiplexed on the same UART.
+
+if EXAMPLES_MIBOT_AGENT
+
+config EXAMPLES_MIBOT_AGENT_PROGNAME
+	string "Program name"
+	default "mibot_agent"
+
+config EXAMPLES_MIBOT_AGENT_PRIORITY
+	int "Task priority"
+	default 120
+
+config EXAMPLES_MIBOT_AGENT_STACKSIZE
+	int "Task stack size"
+	default 8192
+
+config EXAMPLES_MIBOT_AGENT_UART
+	string "ESP32 UART device"
+	default "/dev/ttyS0"
+
+config EXAMPLES_MIBOT_AGENT_BAUD
+	int "ESP32 UART baud rate"
+	default 1000000
+
+config EXAMPLES_MIBOT_AGENT_FB
+	string "Framebuffer device"
+	default "/dev/fb0"
+
+config EXAMPLES_MIBOT_AGENT_AUDIO
+	bool "Enable optional audio bridge"
+	default n
+	depends on AUDIO
+	---help---
+		Enable the audio bridge only after a board-specific SF32
+		AUDCODEC/AUDPRC NuttX lower-half has been registered. The
+		DevKit-LCD uses the on-chip 24-bit audio ADC/DAC and PA10
+		amplifier enable; it is not an external I2S codec.
+
+config EXAMPLES_MIBOT_AGENT_AUDIO_HW
+	bool "Initialize on-chip SF32 audio analog paths"
+	default n
+	depends on EXAMPLES_MIBOT_AGENT
+	---help---
+		Initialize the SF32LB52X on-chip AUDCODEC ADC/DAC analog
+		paths (including MIC bias). This is a hardware bring-up
+		step and does not register a NuttX streaming audio device.
+
+config EXAMPLES_SF32_AUDIO_TEST
+	bool "SF32 audio test command"
+	default y
+	depends on EXAMPLES_MIBOT_AGENT && I2S
+
+config EXAMPLES_AUDIO_PBT
+	bool "Audio frame conversion tests"
+	default y
+	depends on EXAMPLES_MIBOT_AGENT
+	---help---
+		Register the audio_pbt command.  It exercises
+		sf_compact_frame() and sf_expand_frame() with no codec,
+		DMA or UART involved, so a padded-layout regression can
+		be caught on target without wiring up audio hardware.
+
+# Kept hidden so old defconfigs are normalized without exposing an unsupported
+# second-UART transport.  mibot_agent/mibot_link must remain the sole owner of
+# /dev/ttyS0; network access is provided by the ESP32 side of that link.
+config EXAMPLES_MIBOT_ROUTE_A_PPP
+	bool
+	default n
+	depends on n
+
+
+endif
+
+config EXAMPLES_DEEPSEEK_SMOKE
+	bool "DeepSeek UART smoke test"
+	default n
+	depends on NSH_BUILTIN_APPS && !EXAMPLES_MIBOT_AGENT && !EXAMPLES_AI_AGENT_VELA
+	---help---
+		Run a one-shot AA55 HELLO/AI_REQUEST/AI_RESPONSE check against the
+		ESP32 DeepSeek gateway. This intentionally owns /dev/ttyS0 by itself;
+		do not enable mibot_agent or ai_agent in the same image.
+
+if EXAMPLES_DEEPSEEK_SMOKE
+
+config EXAMPLES_DEEPSEEK_SMOKE_UART
+	string "DeepSeek smoke UART device"
+	default "/dev/ttyS0"
+
+config EXAMPLES_DEEPSEEK_SMOKE_BAUD
+	int "DeepSeek smoke UART baud rate"
+	default 1000000
+
+endif
+
+config EXAMPLES_MIBOT_VOICE_AGENT
+	bool "Mibot voice agent (6-state dialog main state machine)"
+	default n
+	depends on NSH_BUILTIN_APPS && !EXAMPLES_MIBOT_AGENT && !EXAMPLES_DEEPSEEK_SMOKE && !EXAMPLES_AI_AGENT_VELA
+	select PTHREAD
+	---help---
+		Run the standalone Mibot voice agent. It owns the 6-state dialog
+		main state machine (IDLE/LISTENING/THINKING/ACTING/SPEAKING/
+		SAFE_STOP) on the SF32 side, drives the LCD, board audio and the
+		DeepSeek + native tool-call round-trip, and forwards robot.*
+		commands to the ESP32 over the shared AA55/CRC UART. It
+		intentionally owns /dev/ttyS0 by itself; do not enable mibot_agent,
+		deepseek_smoke or ai_agent in the same image. First version runs in
+		all-stub mode (ASR/TTS/ToF stubbed) and Sequential_Mode.
+
+if EXAMPLES_MIBOT_VOICE_AGENT
+
+config EXAMPLES_MIBOT_VOICE_AGENT_PROGNAME
+	string "Program name"
+	default "mibot_voice_agent"
+
+config EXAMPLES_MIBOT_VOICE_AGENT_PRIORITY
+	int "Task priority"
+	default 120
+
+config EXAMPLES_MIBOT_VOICE_AGENT_STACKSIZE
+	int "Task stack size"
+	default 12288
+
+config EXAMPLES_MIBOT_VOICE_AGENT_UART
+	string "ESP32 UART device"
+	default "/dev/ttyS0"
+
+config EXAMPLES_MIBOT_VOICE_AGENT_BAUD
+	int "ESP32 UART baud rate"
+	default 1000000
+
+config EXAMPLES_MIBOT_VOICE_AGENT_FB
+	string "Framebuffer device"
+	default "/dev/fb0"
+
+config EXAMPLES_MIBOT_VOICE_AGENT_BUTTON
+	string "Wake button device"
+	default "/dev/buttons"
+	---help---
+		Physical dialog trigger, equivalent to the va_wake NSH command.
+		On the SF32LB52-DevKit-LCD this is KEY2 on PA11 (active high),
+		served by the board's sf32lb52_buttons driver.  Requires
+		CONFIG_INPUT and CONFIG_INPUT_BUTTONS; leave the string empty to
+		build without a physical trigger.
+
+		PA34 is deliberately not usable here: it is the power key wired
+		into the reset path, and the board leaves its pinmux disabled.
+
+endif

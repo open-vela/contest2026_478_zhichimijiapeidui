@@ -1,0 +1,60 @@
+# SF32 AI Agent probe profile.
+#
+# The DevKit-LCD has one business UART (/dev/ttyS0).  ai_agent owns it through
+# mibot_link; the legacy mibot_agent app is intentionally disabled by its
+# Kconfig dependency when this symbol is enabled.
+CONFIG_EXAMPLES_AI_AGENT_VELA=y
+CONFIG_EXAMPLES_AI_AGENT_VELA_PROGNAME="ai_agent"
+CONFIG_EXAMPLES_AI_AGENT_VELA_PRIORITY=100
+CONFIG_EXAMPLES_AI_AGENT_VELA_STACKSIZE=32768
+CONFIG_EXAMPLES_AI_AGENT_VELA_DATA_DIR="/data/agent"
+CONFIG_AI_AGENT_MIBOT_LINK=y
+CONFIG_AI_AGENT_MIBOT_LINK_UART="/dev/ttyS0"
+CONFIG_AI_AGENT_MIBOT_LINK_BAUD=1000000
+CONFIG_AI_AGENT_MIBOT_LINK_AUDIO=y
+
+# Keep the first target small enough to measure on the 512 KiB SRAM part.
+# These services are independent of the local robot/audio workflow.
+# CONFIG_AI_AGENT_FEISHU is not set
+# CONFIG_AI_AGENT_WEIXIN is not set
+# CONFIG_AI_AGENT_MQTT is not set
+# CONFIG_AI_AGENT_NODE is not set
+# CONFIG_AI_AGENT_MCP is not set
+# CONFIG_AI_AGENT_BLE_GATT is not set
+# CONFIG_AI_AGENT_BLE_NET is not set
+# CONFIG_AI_AGENT_CAMERA is not set
+# CONFIG_AI_AGENT_LVGL_UI is not set
+# The board baseline enables the LVGL demo even when the AI Agent UI channel
+# is disabled.  Keep the Route-A image independent of the optional LVGL
+# FetchContent download; framebuffer/audio remain available to the board.
+# CONFIG_GRAPHICS_LVGL is not set
+# CONFIG_EXAMPLES_LVGLDEMO is not set
+# CONFIG_AI_AGENT_REST_API is not set
+# CONFIG_AI_AGENT_SKILL_SYNC is not set
+
+# Socket/TLS prerequisites for the standard Router path.  The current board
+# still needs an ESP32-backed netdev or gateway before these can reach Wi-Fi.
+CONFIG_NET=y
+CONFIG_ALLOW_BSD_COMPONENTS=y
+CONFIG_NET_TCP=y
+CONFIG_NET_UDP=y
+CONFIG_NET_ICMP=y
+CONFIG_NETDB_DNSCLIENT=y
+CONFIG_NET_ROUTE=y
+CONFIG_NET_TUN=y
+CONFIG_NET_TUN_PKTSIZE=1200
+CONFIG_NETDEV_IFINDEX=y
+CONFIG_NETUTILS_NETLIB=y
+CONFIG_CRYPTO=y
+CONFIG_CRYPTO_MBEDTLS=y
+CONFIG_NETUTILS_WEBCLIENT=y
+CONFIG_NETUTILS_CJSON=y
+CONFIG_NETUTILS_CJSON_VERSION="1.7.10"
+CONFIG_AI_AGENT_MIBOT_LINK_NET=y
+CONFIG_AI_AGENT_MIBOT_LINK_NET_IFNAME="mib0"
+CONFIG_AI_AGENT_MIBOT_LINK_NET_MTU=1200
+CONFIG_AI_AGENT_MIBOT_LINK_NET_QUEUE_DEPTH=4
+CONFIG_AI_AGENT_MIBOT_LINK_NET_LOCAL_ADDR="10.42.0.2"
+CONFIG_AI_AGENT_MIBOT_LINK_NET_PEER_ADDR="10.42.0.1"
+CONFIG_AI_AGENT_MIBOT_LINK_NET_NETMASK="255.255.255.252"
+CONFIG_AI_AGENT_MIBOT_LINK_NET_DNS="1.1.1.1"
